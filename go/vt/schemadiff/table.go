@@ -1019,7 +1019,7 @@ func (c *CreateTableEntity) diffOptions(alterTable *sqlparser.AlterTable,
 			case "CHARSET":
 				switch hints.TableCharsetCollateStrategy {
 				case TableCharsetCollateStrict:
-					tableOption = &sqlparser.TableOption{String: ""}
+					tableOption = &sqlparser.TableOption{Name: "CHARSET", String: defaultCharset(), CaseSensitive: true}
 					// in all other strategies we ignore the charset
 				}
 			case "CHECKSUM":
