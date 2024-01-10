@@ -191,15 +191,19 @@ func TestDiffTables(t *testing.T) {
 		},
 		{
 			name: "changing table level defaults with column specific settings",
-			from: `CREATE TABLE t (
-  a varchar(64) CHARACTER SET latin1 COLLATE latin1_bin
-) ENGINE=InnoDB DEFAULT CHARSET=latin1`,
-			to: `CREATE TABLE t (
-  a varchar(64) CHARACTER SET latin1 COLLATE latin1_bin
-) ENGINE=InnoDB`,
+			from: `create table t (a varchar(64) character set latin1 collate latin1_bin) default charset=latin1`,
+			to:   `create table t (a varchar(64) character set latin1 collate latin1_bin)`,
 			hints: &DiffHints{
-				AlterTableAlgorithmStrategy: AlterTableAlgorithmStrategyCopy,
+				TableCharsetCollateStrategy: TableCharsetCollateIgnoreAlways,
 			},
+		},
+		{
+			name:   "changing table level charset to default",
+			from:   `create table t (i int) default charset=latin1`,
+			to:     `create table t (i int)`,
+			action: "alter",
+			diff:   "alter table t charset utf8mb4",
+			cdiff:  "ALTER TABLE `t` CHARSET utf8mb4",
 		},
 	}
 	parser := sqlparser.NewTestParser()
