@@ -189,6 +189,18 @@ func TestDiffTables(t *testing.T) {
 				TableQualifierHint: TableQualifierDeclared,
 			},
 		},
+		{
+			name: "changing table level defaults with column specific settings",
+			from: `CREATE TABLE t (
+  a varchar(64) CHARACTER SET latin1 COLLATE latin1_bin
+) ENGINE=InnoDB DEFAULT CHARSET=latin1`,
+			to: `CREATE TABLE t (
+  a varchar(64) CHARACTER SET latin1 COLLATE latin1_bin
+) ENGINE=InnoDB`,
+			hints: &DiffHints{
+				AlterTableAlgorithmStrategy: AlterTableAlgorithmStrategyCopy,
+			},
+		},
 	}
 	parser := sqlparser.NewTestParser()
 	for _, ts := range tt {
